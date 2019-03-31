@@ -1,0 +1,840 @@
+---
+title: "MATH5806 - Assignment 1 [100 marks]"
+subtitle: '**Due Date**: 5pm, 15 September 2017'
+output:
+  pdf_document:
+    keep_tex: yes
+  html_document:
+    keep_md: yes
+  word_document: default
+---
+
+
+I declare that this assessment item is my own work, except where acknowledged, and has not been submitted for academic credit elsewhere. I acknowledge that the assessor of this item may, for the purpose of assessing this
+item reproduce this assessment item and provide a copy to another member of the University; and/or communicate a copy of this assessment item to a plagiarism checking service (which may then retain a copy of the assessment
+item on its database for the purpose of future plagiarism checking). I certify that I have read and understood the University Rules in respect of Student Academic Misconduct.
+
+\bigskip
+\bigskip
+
+Name / Student Number: ... `r ( your_name <- "" )` / `r ( your_zID <- "" )` ...
+
+Signature, Date: ... SIGN HERE THE PRINTED PDF VERSION ..., `r format(Sys.time(), "%d / %m / %Y")`
+
+\bigskip
+\bigskip
+
+This document is an _R Markdown Notebook_ (http://rmarkdown.rstudio.com). To interact with this file, and to be able to produce a PDF file from it, you need to install three software on your computer (in that order):
+
+1. **R:** https://cran.r-project.org/ and also `knitr`
+2. **\LaTeX:** https://miktex.org/download
+3. **RStudio:** https://www.rstudio.com/products/rstudio/download/
+
+You can find more information about the _Markdown language_ here: 
+
+- Tutorial: http://commonmark.org/help/tutorial/
+- Try it online: https://upmath.me/
+- Extensive guide: https://www.markdownguide.org/
+
+and about the _R Markdown language_ here: 
+
+- https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf 
+
+
+In this R Notebook, you can add a new _chunk_ (i.e., a piece of R code that will be executable from within your document) by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*. When you execute code within the notebook, the results appear beneath the code. Each chunk can be executed by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. Here is an example:
+
+```{r}
+rnorm(5)
+```
+
+
+To create a PDF file containing the code and output, click the *Preview* button or press *Ctrl+Shift+K*.
+
+
+
+It is easy to include mathematical formulas by using \LaTeX\ code. For inline equations, this code has to be put between single dollar signs, e.g., $\sum x_i$, while for centered equations double dollar signs must be used, e.g.,
+$$
+\int_0^1 f(x)dx =1.
+$$
+
+A nice introduction to \LaTeX\ can be found here: 
+
+- https://www.sharelatex.com/blog/latex-guides/beginners-tutorial.html 
+
+Finding individual symbols in \LaTeX\ is made easy via this online drawing tool:
+
+- http://detexify.kirelabs.org/classify.html
+
+```{r, echo = FALSE}
+library("knitr")
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+-------------------------------------------------------------------------------------------------------------
+
+\newpage
+
+[**Instructions**]: # ( 1. Name your Rmd file as follows: StudentFirstName_StudentLastName_zID.Rmd (where zID is your zID)
+                           For example: Pierre_LafayeDeMicheaux_z1234567.Rmd
+                        2. Your Rmd code must compile (i.e., Knit to PDF) **without any error** (with `eval_mycode <- TRUE`, see below).
+                        3. **Crucial:** Keep the names of the variables as I have defined them.
+                        4. When you have finished, print the PDf file, sign it and bring it to me.
+                      )
+
+
+```{r, echo = TRUE}
+# Put this variable to TRUE when you have completed all the codes below.
+eval_mycode <- TRUE
+```
+
+# Exercise 1 : First basic commands [5 marks]
+
+Find a **two-columns** data set on the web (with a **name for both variables**) that could be analysed using the **simple** linear regression (SLR) model. Complete/modify the R chunk below to demonstrate that the SLR technique is appropriate for your data (i.e., the linearity assumption must be satisfied, the $R^2$ value must be **greater than 0.5** and the slope coefficient must be statistically **significant**). You will use `eval = TRUE` below so that your code is executed and the output displayed in the PDF file of your assignment. Your data set will be read directly from the web (do **not** download the file yourself, let R do it).
+
+\bigskip
+
+```{r, eval = TRUE}
+# Download your data directly from a website of your choice:
+my_data <- read.table("http://raw.githubusercontent.com/vincentarelbundock/Rdatasets/master/csv/datasets/cars.csv", header = TRUE, dec = ".", sep = ",", skip = 0,colClasses = c("NULL",NA,NA))
+  
+# Display the first ten lines of the data
+head(my_data)
+
+# Create a scatterpot of the (explanatory,response) values
+plot( my_data$speed,my_data$dist , main = "Appropriate title", col = "red")
+
+# Add the fitted regression line
+lm_my_data <- lm( dist~speed , data = my_data)
+abline(lm_my_data, col = "blue")
+```
+
+
+# Exercise 2 : Computer simulation [43 marks]
+
+Let us consider the following **simple** linear regression (SLR) model:
+$$
+Y_i = 2x_i - 1 + \epsilon_i,\qquad i=1,\ldots,n,
+$$
+where the $x_i$'s are **deterministic** values, the $\epsilon_i$'s are **i.i.d. centered** random variables with **common** variance $\sigma^2$. The coefficients of the regression are set to $\beta_1=-1$ and $\beta_2=2$.
+
+1. **Simulation [5 marks]** Generate $n = 50$ observations from the previous SLR model by letting $\sigma^2=1$ and the $x_i$ being equidistant values between 0 and 1 (0 and 1 included). We assume that the random error term is Gaussian. 
+
+  - 
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 50
+
+    # Variance of the errors
+    sigma2 <- 1
+
+    # Values of the explanatory variable
+    xvec <- seq(0,1,length=n)
+    # Error values
+    epsilon <- rnorm(n,mean=0,sd=sqrt(sigma2))
+      
+    # Coefficients
+    beta1 <- -1
+    beta2 <- 2
+
+    # Values of the response variable
+    yvec <- beta2*xvec+beta1+epsilon
+
+    ```
+
+
+    Draw a scatterplot of the $y_i$'s against the $x_i$'s (in black). Add on this plot (\textcolor{red}{in red}) the target line (i.e., the population regression line).
+
+  - 
+    ```{r, eval = TRUE}
+    # Draw the scatterplot in black (do not modify title, etc.)
+    plot(xvec,yvec,col="black")
+    
+    # Add the population regression line (in red)
+    abline( coef = c(beta1,beta2),col="red")
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.1.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+2. **Estimation [6 marks]** 
+
+  - Recall the formulas of the unbiased estimators of $\beta_1$, $\beta_2$ (as a function of $\boldsymbol{x}$ and $\boldsymbol{Y}$) and of $\sigma^2$ (as a function of the residuals $\hat{\epsilon}_i$ and of the  size $n$).
+  
+  $$
+   \hat{\beta}_1=\frac{\sum_{i=1}^n(x_i-\bar{x})(Y_i-\bar{Y})}{\sum_{i=1}^n(x_i-\bar{x})^2},
+  \hat{\beta}_2=\bar{Y}-\hat{\beta}_1\bar{x},
+  \hat{\sigma}^2=\frac{1}{n-2}\sum_{i=1}^n(Y_i-\hat{\beta}_1-
+  \hat{\beta}_2x_i)^2
+  $$
+  
+  - Compute, using the `lm()` function, the estimates $\hat{\beta}_1$ and $\hat{\beta}_2$. Compute also the estimate $\hat{\sigma}^2$. (**Do not input the numerical values yourself by hand, use R functions.**) 
+  
+    ```{r, eval = TRUE}
+    # We perform linear regression using the lm() function
+    my_lm_model_n50 <- lm( yvec~xvec )
+    
+    # Estimates of beta_1 and beta_2
+    beta1_hat <-  my_lm_model_n50$coefficients[1]
+    beta2_hat <- my_lm_model_n50$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat <- sum(residuals(my_lm_model_n50)^2)/(n-2)
+    ```
+  
+  - Create an R vector `yhat_vec` that will contain the $\hat{y}_i$'s fitted values. 
+  
+    ```{r, eval = TRUE}
+    # Creation of the vector of fitted values
+    yhat_vec <- beta1_hat+beta2_hat*xvec
+    ```
+    
+  - Do again the exact same plot as above. Add on it the (estimated) regression line (\textcolor{blue}{in blue}).
+
+    ```{r, eval = TRUE}
+    # Reproduce the above plot (do not modify title, etc.)
+    plot(xvec,yvec,col="black")
+    
+    # Draw the blue line
+    abline(lm(yvec~xvec),col="blue")
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.2.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+3. **Influence of the  size [9 marks]** 
+
+  - Reproduce results of 1. and 2. with $n=100$.
+
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 100
+
+    # Variance of the errors
+    sigma2 <- 1
+
+    # Values of the explanatory variable
+    xvec_n100 <-seq(0,1,length=n)
+
+    # Error values
+    epsilon_n100 <-rnorm(n,0,1)
+
+    # Values of the response variable
+    yvec_n100 <- beta1+beta2*xvec_n100+epsilon_n100
+
+    # Draw the scatterplot in black (do not modify title, etc.)
+    plot(xvec_n100,yvec_n100,col="black")
+    
+    # Add the population regression line (in red)
+    abline( coef = c(beta1,beta2),col="red" )
+    
+    # We perform linear regression using the lm() function
+    my_lm_model_n100 <- lm(yvec_n100~xvec_n100)
+  
+    # Estimates of beta_1 and beta_2
+    beta1_hat_n100 <- my_lm_model_n100$coefficients[1]
+    beta2_hat_n100 <- my_lm_model_n100$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat_n100 <- sum(residuals(my_lm_model_n100)^2)/(n-2)
+    # Creation of the vector of fitted values
+    yhat_vec_n100 <-  beta1_hat_n100+beta2_hat_n100*xvec_n100
+      
+    # Draw the blue line
+   abline(lm(yhat_vec_n100~xvec_n100),col='blue')
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.3a.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+
+  - Reproduce results of 1. and 2. with $n=500$.
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 500
+
+    # Variance of the errors
+    sigma2 <- 1
+
+    # Values of the explanatory variable
+    xvec_n500 <- seq(0,1,length=n)
+
+    # Error values
+    epsilon_n500 <- rnorm(n,0,1)
+
+    # Values of the response variable
+    yvec_n500 <- beta1+beta2*xvec_n500+epsilon_n500
+
+    # Draw the scatterplot in black (do not modify title, etc.)
+    plot(xvec_n500,yvec_n500,col="black")
+    # Add the population regression line (in red)
+    abline(coef = c(beta1,beta2), col = "red")
+    
+    # We perform linear regression using the lm() function
+    my_lm_model_n500 <- lm(yvec_n500 ~ xvec_n500)
+    
+    # Estimates of beta_1 and beta_2
+    beta1_hat_n500 <- my_lm_model_n500$coefficients[1]
+    beta2_hat_n500 <- my_lm_model_n500$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat_n500 <- sum(residuals(my_lm_model_n500)^2)/(n - 2)
+
+    # Creation of the vector of fitted values
+    yhat_vec_n500 <- beta1_hat_n500 + beta2_hat_n500 * xvec_n500
+      
+    # Draw the blue line
+    abline(lm(yhat_vec_n500~xvec_n500),col='blue')
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.3b.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+  - Recall the formulas of the variances of the **estimators** $\hat{\beta}_1$ and of $\hat{\beta}_2$ in terms of $n$, $\sigma^2$ and the $x_i$'s.
+  
+    $$
+  Var(\hat{\beta_1})=\frac{\sigma^2\sum_{i=1}^nx_i^2}
+    {n\sum_{i=1}^n(x_i-\bar{x})^2},
+    Var(\hat{\beta_2})=\frac{\sigma^2}
+    {\sum_{i=1}^n(x_i-\bar{x})^2}
+    $$
+    
+  - Comment the results obtained above.
+  
+  > As the  size increases, the estimators of $\beta_1$ and $\beta_2$ are getting closer to real value. But estimators of $\sigma^2$ is getting closer to 0
+
+\bigskip\bigskip
+
+4. **Influence of the variance of the errors [9 marks]** 
+
+  - Keeping $n=50$, reproduce results of 1. and 2. with $\sigma^2=0.01$.
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 50
+    
+    # Variance of the errors
+    sigma2 <- 0.01
+
+    # Values of the explanatory variable
+    xvec_sigma2001 <- seq(0,1,length=n)
+
+    # Error values
+    epsilon_sigma2001 <- rnorm(n,0,sqrt(sigma2))
+
+    # Values of the response variable
+    yvec_sigma2001 <- beta1+beta2*xvec_sigma2001+epsilon_sigma2001
+
+    # Draw the scatterplot in black (do not modify title, etc.)
+    plot(xvec_sigma2001, yvec_sigma2001, col = "black")
+    
+    # Add the population regression line (in red)
+   abline(coef = c(beta1,beta2),col="red")
+    # We perform linear regression using the lm() function
+    my_lm_model_sigma2001 <- lm(yvec_sigma2001 ~ xvec_sigma2001)
+    
+    # Estimates of beta_1 and beta_2
+    beta1_hat_sigma2001 <- my_lm_model_sigma2001$coefficients[1]
+    beta2_hat_sigma2001 <- my_lm_model_sigma2001$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat_sigma2001 <- sum(residuals(my_lm_model_sigma2001)^2)/(n -
+2)
+
+    # Creation of the vector of fitted values
+    yhat_vec_sigma2001 <- beta1_hat_sigma2001 + beta2_hat_sigma2001 *
+xvec_sigma2001
+    # Draw the blue line
+   abline(lm(yhat_vec_sigma2001~xvec_sigma2001), col = "blue")
+   
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.4a.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+
+  - Keeping $n=50$, reproduce results of 1. and 2. with $\sigma^2=100$.
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 50
+    
+    # Variance of the errors
+    sigma2 <- 100
+
+    # Values of the explanatory variable
+    xvec_sigma2100 <- seq(0,1,length=n)
+
+    # Error values
+    epsilon_sigma2100 <- rnorm(n,0,sqrt(sigma2))
+
+    # Values of the response variable
+    yvec_sigma2100 <- beta1+beta2*xvec_sigma2100+epsilon_sigma2100
+
+    # Draw the scatterplot in black (do not modify title, etc.)
+    plot(xvec_sigma2100,yvec_sigma2100,col="black")
+    
+    # Add the population regression line (in red)
+    abline(coef = c(beta1,beta2),col="red")
+  
+    # We perform linear regression using the lm() function
+    my_lm_model_sigma2100 <- lm(yvec_sigma2100~xvec_sigma2100)
+    
+    # Estimates of beta_1 and beta_2
+    beta1_hat_sigma2100 <- my_lm_model_sigma2100$coefficients[1]
+    beta2_hat_sigma2100 <- my_lm_model_sigma2100$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat_sigma2100 <- sum(residuals(my_lm_model_sigma2100)^2)/(n -
+2)
+
+    # Creation of the vector of fitted values
+    yhat_vec_sigma2100 <- beta1_hat_sigma2100 + beta2_hat_sigma2100 *
+xvec_sigma2100
+    # Draw the blue line
+   abline(lm(yhat_vec_sigma2100~xvec_sigma2100), col = "blue")
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.4b.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+  - Comment the results obtained above.
+  
+    > Your comment here: The smaller the variance is, the higher the accuracy of the estimation
+
+5. **Influence of the dispersion of the $x_i$'s [9 marks]** 
+
+  - Keeping $n=50$ and $\sigma^2=1$, reproduce the results of 1. and 2. with equidistant $x$ values between -0.1 and +0.1 (both values included).
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 50
+    
+    # Variance of the errors
+    sigma2 <- 1
+
+    # Values of the explanatory variable
+    xvec_xi01 <- seq(-0.1,0.1,length=n)
+
+    # Error values
+    epsilon_xi01 <- rnorm(n,0,sqrt(sigma2))
+
+    # Values of the response variable
+    yvec_xi01 <- beta1+beta2*xvec_xi01+epsilon_xi01
+
+    # Draw the scatterplot in black (do not modify title, etc.)
+  plot(xvec_xi01,yvec_xi01,col="black")
+    # Add the population regression line (in red)
+abline(coef = c(beta1,beta2),col="red")
+    # We perform linear regression using the lm() function
+    my_lm_model_xi01 <- lm(yvec_xi01~xvec_xi01)
+      
+    # Estimates of beta_1 and beta_2
+    beta1_hat_xi01 <- my_lm_model_xi01$coefficients[1]
+    beta2_hat_xi01 <- my_lm_model_xi01$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat_xi01 <- sum(residuals(my_lm_model_xi01)^2)/(n-2)
+
+    # Creation of the vector of fitted values
+    yhat_vec_xi01 <- beta1_hat_xi01+beta2_hat_xi01*xvec_xi01
+      
+    # Draw the blue line
+   abline(lm(yhat_vec_xi01~xvec_xi01), col = "blue")
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.5b.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+    
+
+  - Keeping $n=50$ and $\sigma^2=1$, reproduce the results of 1. and 2. with equidistant $x$ values between -10 and +10 (both values included).
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 50
+    
+    # Variance of the errors
+    sigma2 <- 1
+
+    # Values of the explanatory variable
+    xvec_xi10 <- seq(-10,10,length=n)
+
+    # Error values
+    epsilon_xi10 <- rnorm(n,0,sqrt(sigma2))
+
+    # Values of the response variable
+    yvec_xi10 <- beta1+beta2*xvec_xi10+epsilon_xi10
+
+    # Draw the scatterplot in black (do not modify title, etc.)
+    plot(xvec_xi10,yvec_xi10,col="black")
+    # Add the population regression line (in red)
+    abline(coef = c(beta1,beta2),col="red")
+    
+    # We perform linear regression using the lm() function
+    my_lm_model_xi010 <- lm(yvec_xi10~xvec_xi10)
+      
+    # Estimates of beta_1 and beta_2
+    beta1_hat_xi10 <- my_lm_model_xi010$coefficients[1]
+    beta2_hat_xi10 <- my_lm_model_xi010$coefficients[2]
+
+    # Estimate of sigma^2
+    sigma2hat_xi10 <- sum(residuals(my_lm_model_xi010)^2)/(n-2)
+
+    # Creation of the vector of fitted values
+    yhat_vec_xi10 <- beta1_hat_xi10+beta2_hat_xi10*xvec_xi10
+      
+    # Draw the blue line
+       abline(lm(yhat_vec_xi10~xvec_xi10), col = "blue")
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.5a.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+  - Comment the results obtained above.
+  
+    > Your comment here : The greater the dispersion, the higher the accuracy of the estimation
+
+6. **Law of the estimators [5 marks]** We assume $n=20$, $\sigma^2=1$ and $x_i\in[-1;1]$. We are interested in the law of the unbiased estimator of $\sigma^2$. Use the `replicate()` function to create $M=1,000$  estimations of this quantity. 
+
+  - 
+    ```{r, eval = TRUE}
+    # We set the seed so that the results are reproducible
+    set.seed(1)
+
+    #  size
+    n <- 20
+    
+    # Variance of the errors
+    sigma2 <- 1
+
+    # Values of the explanatory variable
+    xvec_q6 <- seq(-1,1,length=n)
+
+    # Number of replications
+    M <- 1000
+      
+    # Use the replicate() function
+    sigma2_estimates <- replicate(M, expr = sum(lm(beta1 + beta2 *
+xvec_q6 + rnorm(n, 0, 1) ~ xvec_q6)$residuals^2)/(n - 2))
+
+    # Display the 4 first values of `sigma2_estimates`
+    sigma2_estimates[1:4]
+    ```
+    
+  - Then draw a histogram (\textcolor{red}{in red}) of the $M$ values of $(n-2)\hat{\sigma}^2$ (notice the $n-2$) with 100 cells. Add (superimpose) on this histogram (\textcolor{blue}{in blue}) the true density curve of the corresponding estimator.
+    
+    ```{r, eval = TRUE}
+    # Draw your histogram of hat{sigma}^2 values in red (do not modify title, etc.)
+    hist( (n - 2) * sigma2_estimates, probability = T, col = "red" , breaks = 100)    
+    
+    # Add the density curve (in blue) for the law of hat{sigma}^2
+    curve(expr = dchisq(x, n - 2), xlim = c(0, 45), add = T, col = "blue")
+    
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic2.6.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+    
+  - Comment.
+    
+    > Your comment here : Using the replicate() function the estimation accuracy of variance is very high. The estimate of variance is close to 1
+
+# Exercise 3 : Full statistical analysis of a data set [44 marks]
+
+The data to use in this exercise come from a scientific study _Species number and endemism : The Galapagos Archipelago revisited, M. P. Johnson and P. H. Raven (1973), Science, 179, 893-895_. The researchers recorded information on turtles on 30 islands in the Galapagos. We want to study (explain) the number of turtle species (`Species`) found on an island using several other geographical variables:
+
+- the number of endemic species (`Endemics`);
+- the island area (`Area`) in $km^2$;
+- the maximum elevation of the island (`Elevation`) in $m$;
+- the distance to the closest island (`Nearest`) in $km$;
+- the distance to the main island of Santa Cruz (`Scruz`) in $km$, where most of hotels and businesses are;
+- the area of the closest island (`Adjacent`) in $km^2$.
+
+The data can be found in the `gala` data set of the `faraway` R package.
+
+```{r, eval = TRUE}
+library("faraway") # Install this R package first
+data(gala)
+attach(gala)
+head(gala)
+dim(gala)
+```    
+
+1. What are the types of the variable? Use the `str()` function.
+
+    ```{r, eval = TRUE}
+    str(gala)
+    ```
+
+> All the variables are: Species Endemics Area Elevation Nearest Scruz Adjacent and they are numric
+
+2. Write the equation of the MLR model with all the assumptions. Indicate what is known/unknown, random/non random.
+
+$$
+Y_i=\beta_0+\beta_1x_{i1}+\beta_2x_{i2}+\cdots+\beta_px_{ip}+\epsilon_i~\mbox{where}~i=1,2,\cdots,n
+$$
+
+> ... Assumptions here ...
+(1) The explanatory variables are nonrandom, and each X is uncorrelated.
+
+(2) $E(\epsilon_i)=0,Var(\epsilon_i)=\sigma^2,E(\epsilon_i\epsilon_j)=0,i\neq j,i,j=1,2,\cdots,n.$
+
+(3) $\epsilon_i\sim N(0,\sigma^2),i=1,2,\cdots,n.$
+
+(4) $\mbox{cov}(x_{ij},\epsilon_i)=0,j=1,2,\cdots,p,i=1,2,\cdots,n.$
+
+> ... What is known/unknown, random/non random here ...
+(1) $Y_i,x_{i1},\cdots,x_{ip},i=1,2,\cdots,n$ are known. 
+
+(2) $\beta_{1},\cdots,\beta_{p}$ are unknown.
+
+(3) $Y_i,x_{i1},\cdots,x_{ip},i=1,2,\cdots,n$ are nonrandom.
+
+(4) $\epsilon_i,i=1,2,\cdots,n$ are random.
+
+3. Produce appropriate univariate and bivariate numerical and graphical summaries for all the variables.
+
+    ```{r, eval = TRUE}
+    summary(gala)
+    boxplot(gala)
+    pairs(gala)
+    cor(gala)
+    ```  
+
+4. Using only Pearson correlations, what is the least explanatory variable? what is the most explanatory variable? 
+
+> The least explanatory variable is Nearest
+
+> The most explanatory variable is Endemics
+
+5. Perform a multiple regression. Display the estimation of all the parameters, as well as the global Fisher test. What explanatory variable(s) is (are) significant? Interpret the coefficient of the (most) significant variable.
+
+    ```{r, eval =TRUE}
+    ( lm_gala <- lm(Species~.,data=gala) )
+    summary(lm_gala)
+    ```
+
+> The significant explanatory variable(s) is (are): Endemics
+
+> Interpretation here : The estimate is 4.393654. P-value is 4.13*10^(-9).If the level of significance is 0.05. Coefficients of Endemics is significant
+
+**From now on, we try to explain `Species` only with `Elevation` and `Adjacent` (and the constant). **
+
+6. Give a $95\%$ confidence interval for $\beta_2$, the coefficient of `Adjacent`.
+
+    ```{r, eval = TRUE}
+    new_lm_gala_model <- lm(Species~Elevation+Adjacent,data=gala)
+    ( gala_confint_beta2 <- confint(new_lm_gala_model,"Adjacent",level=0.95) )
+    ```
+
+7. Assume we have new values of `Elevation` and `Adjacent`, respectively $50$ and $3.2$, for an unexplored island. Give an estimation of the expected number of species on this new island, together with the associated confidence interval.
+
+    ```{r, eval = TRUE}
+    new_Elevation <- 50 
+    new_Adjacent <- 3.2 
+    ( estim_expect_nb_species_and_confint <- predict(new_lm_gala_model,data.frame(Elevation=new_Elevation,Adjacent=new_Adjacent),interval = "prediction",level=0.95)  )
+    ```
+
+8. Draw a histogram and perform a test of hypothesis to judge about the normality of the errors. Comment.
+
+    ```{r, eval = TRUE}
+    # Draw a histogram in black  (do not modify title, etc.)
+    hist(residuals( new_lm_gala_model ),probability = T,col="black")
+
+    # You might need to install this R package first
+    library("tseries")
+
+    # Compute the normality test
+    ( normality_test <- jarque.bera.test(residuals(new_lm_gala_model)) )
+
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic3.8.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+> Your comment here: The hypothesis of normality is rejected .
+  
+
+9. Compute the studentized residuals and the leverage values. What do you learn from these results? What "biological" explanation could you give?
+
+    ```{r, eval = TRUE}
+    ( stud_resid <- rstudent(new_lm_gala_model))
+    ( lever_values <- hatvalues(new_lm_gala_model) )
+    ```
+
+> Your comment here: SantaCruz is outlier. Fernandina is high leverage point
+
+10. Draw a plot to check the homoscedasticity assumption. Comment.
+
+    ```{r, eval = TRUE}
+    # Compute the fitted values
+    fitted_gala <- fitted( new_lm_gala_model )
+
+    # Draw a plot in black  (do not modify title, etc.)
+    plot( rstandard(new_lm_gala_model)~fitted_gala ,col="black")
+
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic3.10.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+> Your comment here : The homoscedasticity assumption is reject. The residual graph is gradually spread from left to right. This is a typical symptom of heteroscedasticity. This is the second approach
+
+
+11. 
+ - Compute the Cook's and Welsh-Kuh's distances. What are the **two** observations that you propose to remove?
+
+    ```{r, eval = TRUE}
+    ( cook_dist <- cooks.distance(new_lm_gala_model) )
+    ( wk_dist <-  dffits(new_lm_gala_model)) 
+    ```
+
+> I propose to remove the observations ... and ...
+Isabela  Fernandina  SantaCruz
+ - Does this solve the non-normality problem?
+
+    ```{r, eval = TRUE}
+      new_normality_test <- jarque.bera.test(residuals(lm(Species ~ Elevation + Adjacent, data = gala[-c(12,16,25),])))
+    ```
+
+> Your comment here: The non-normality problem is solved.
+
+
+
+# Exercise 4 : Analysis of a complex (big data) data set [8 marks]
+
+The functional Magnetic Resonance Imaging (fMRI) is a non invasive medical imaging technique that enables one to see the brain "in action". In fMRI research experiments, the subject is placed in the MRI scanner while performing a cognitive task. The brain is then virtually cut into small volume elements, called voxels (by analogy with the pixels of a 2D image). The neural activity is measured, as a function of time, in each one of these voxels. In fact, neurons are brain cells that treat the electrical information in the brain. To function properly, they need to absorb oxygen molecules, carried by the blood. The absorption of these molecules modifies locally the magnetic properties of the hemoglobin cells, leading to tiny local variations of the magnetic field, which are recorded by the MRI scanner.
+
+The aim here is to explain with **many** SLR model (one for each voxel) the tiny variations of the magnetic field as a function of the cognitive stimulus applied to a subject.
+
+We are going to consider an experiment aiming to identify in the brain the neurons that decode coloured visual stimuli. This experiment is described in the article _Temporal and Spatial Independent Component Analysis for fMRI Data Sets
+Embedded in the AnalyzeFMRI R Package, Bordier C., Dojat M. and Lafaye de Micheaux P., Journal of Statistical Software, Volume 44
+Issue 9, (2011)_ available at http://www.jstatsoft.org/v44/i09
+
+The visual stimulus presented to the subject was to display on a screen a sequence of:
+
+- moving coloured rectangles (for $5\times2 s = 10s$);
+- followed by black and white moving rectangles (for $5\times2 s = 10s$);
+- followed by a rest period (for $5\times2 s = 10s$).
+
+This sequence was repeated several times, in that same order, for a total duration time of $125\times 2s=250s$.
+
+The data to use are stored in a (quite big!) data set named `Mond4d.nii`, that you can download at https://www.jstatsoft.org/article/view/v044i09 
+The file format of `Mond4d.nii` is called NIFTI. It can be read with the R function `f.read.nifti.volume()` from the `AnalyzeFMRI` package.
+This function outputs a 4D array, whose three first dimensions are space, while the fourth is for the time (by units of $2s$ for each time). 
+Thus, the data set in the `Mond4d.nii` file is in fact a 4D array of size $128\times128\times30\times125$. However, we will limit our search of the "neurons decoding colour" to a small part of the brain dedicated to the treatment of the visual information, called the visual cortex. The file `MondMask.nii` contains an array of size $128\times128\times30\times1$ that contains only $0$s and $1$s. The value $1$ indicates that the corresponding voxel in the `Mond4D.nii` file is in the visual cortex, while the value 0 indicates that it is not.
+
+
+1. Give the equation of the SLR model you will be using (You can consider that the explanatory variable takes only 0 and 1 values, where 1 would represent a coloured case.) Describe in words what are all the variables. Indicate what hypotheses you made, even if they are not realistic for the data at hand.
+
+> Your answer here: Since the data is 4D case. If we use many linear regression, In a 3D case we use 3 equations to discribe whole thing because 2 variable makes an equation. The 4th dimension is time. Hence we will have 6 equations to describe whole story by combination. 
+
+2. Plot the signal recorded in a voxel taken at random, for example the voxel (60,110,4), as a function of time. Plot also the signal of the stimulus.
+
+    ```{r, eval = TRUE}
+    library("AnalyzeFMRI") # You should install this R package first
+
+    # Read the data set
+    mond4d <- f.read.nifti.volume("Mond4D.nii")
+
+    # and the mask
+    mondmask <- f.read.nifti.volume("MondMask.nii")
+  
+    # Retrieve the values of our chosen voxel, for example the (60,110,4)
+    signal_voxel_random <- mond4d[60,110,4 ,]
+    signal_stimulus <- c(rep(c(1,1,1,1,1,0,0,0,0,0,0,0,0,0,0),8),1,1,1,1,1)
+    # Make the two side-by-side plots
+    par(mfrow = c(1, 2))
+    plot( signal_voxel_random , type = "l",xlim = c(0,125))
+    plot( signal_stimulus , type = "l",xlim = c(0,125))
+
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic4.2.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+
+3. Find the most significant voxel. What are its coordinates $(i,j,k)$? What is its associated $p$-value? 
+
+    ```{r, eval = TRUE}
+    # Find the most significant voxel
+    pval <- 1
+    i_found <- j_found <- k_found <- 1
+    for (i in 1:128) {
+     for (j in 1:128) {
+      for (k in 1:30)  {
+       if (mondmask[i, j, k, 1] == 1) {
+          summary_lm=summary(lm(mond4d[i,j,k,]~signal_stimulus))
+          pvalue_f=pf(summary_lm$fstatistic[1],summary_lm$fstatistic[2],summary_lm$fstatistic[3],lower.tail = FALSE)
+          if(pvalue_f<pval){
+            pval=pvalue_f
+            i_found=i
+            j_found=j
+            k_found=k
+          }
+       }
+      }
+     }
+    }
+
+    # print the voxel found above
+    best_voxel <- c(i_found, j_found, k_found)
+    print(best_voxel)
+
+    # and display its associated p-value
+    ( pval_best_voxel <- pval )
+    ```
+
+4. Plot the signal recorded in that voxel. What do you observe?
+
+    ```{r, eval = TRUE}
+    plot(mond4d[ best_voxel], type = "l")
+
+    # Save plot for marking - Do not modify below
+    my_par <- par()
+    dev.copy(device = png, filename = 'pic4.4.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+> Your observation here As the index goes larger the number of good observation goes down.
+
+5. Use the function `f.plot.volume.gui()` to visualise where this voxel is located within the brain (use the `Mond4D.nii` and `rmodanat13.img` files).
+
+    ```{r, eval = TRUE}
+    f.plot.volume.gui()
+    ```

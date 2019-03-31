@@ -1,0 +1,399 @@
+---
+title: "MATH5806 - Assignment 2 [100 marks]"
+subtitle: '**Due Date**: 17:00, 13 October 2017'
+output:
+  pdf_document:
+    keep_tex: yes
+  html_document:
+    keep_md: yes
+  word_document: default
+---
+
+
+I declare that this assessment item is my own work, except where acknowledged, and has not been submitted for academic credit elsewhere. I acknowledge that the assessor of this item may, for the purpose of assessing this
+item reproduce this assessment item and provide a copy to another member of the University; and/or communicate a copy of this assessment item to a plagiarism checking service (which may then retain a copy of the assessment
+item on its database for the purpose of future plagiarism checking). I certify that I have read and understood the University Rules in respect of Student Academic Misconduct.
+
+\bigskip
+\bigskip
+
+Name / Student Number: ... `r ( your_name <- "" )` / `r ( your_zID <- "" )` ...
+
+Signature, Date: ... SIGN HERE THE PRINTED PDF VERSION ..., `r format(Sys.time(), "%d / %m / %Y")`
+
+\bigskip
+\bigskip
+
+This document is an _R Markdown Notebook_ (http://rmarkdown.rstudio.com). To interact with this file, and to be able to produce a PDF file from it, you need to install three software on your computer (in that order):
+
+1. **R:** https://cran.r-project.org/ and also `knitr`
+2. **\LaTeX:** https://miktex.org/download
+3. **RStudio:** https://www.rstudio.com/products/rstudio/download/
+
+You can find more information about the _Markdown language_ here: 
+
+- Tutorial: http://commonmark.org/help/tutorial/
+- Try it online: https://upmath.me/
+- Extensive guide: https://www.markdownguide.org/
+
+and about the _R Markdown language_ here: 
+
+- https://www.rstudio.com/wp-content/uploads/2016/03/rmarkdown-cheatsheet-2.0.pdf 
+
+
+In this R Notebook, you can add a new _chunk_ (i.e., a piece of R code that will be executable from within your document) by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*. When you execute code within the notebook, the results appear beneath the code. Each chunk can be executed by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Ctrl+Shift+Enter*. Here is an example:
+
+```{r}
+rnorm(5)
+```
+
+
+To create a PDF file containing the code and output, click the *Preview* button or press *Ctrl+Shift+K*.
+
+
+
+It is easy to include mathematical formulas by using \LaTeX\ code. For inline equations, this code has to be put between single dollar signs, e.g., $\sum x_i$, while for centered equations double dollar signs must be used, e.g.,
+$$
+\int_0^1 f(x)dx =1.
+$$
+
+A nice introduction to \LaTeX\ can be found here: 
+
+- https://www.sharelatex.com/blog/latex-guides/beginners-tutorial.html 
+
+Finding individual symbols in \LaTeX\ is made easy via this online drawing tool:
+
+- http://detexify.kirelabs.org/classify.html
+
+```{r, echo = FALSE}
+library("knitr")
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+-------------------------------------------------------------------------------------------------------------
+
+\newpage
+
+[**Instructions**]: # ( 1. Name your Rmd file as follows: StudentFirstName_StudentLastName_zID.Rmd (where zID is your zID)
+                           For example: Pierre_LafayeDeMicheaux_z1234567.Rmd
+                        2. Your Rmd code must compile (i.e., Knit to PDF) **without any error** (with `eval_mycode <- TRUE`, see below).
+                        3. **Crucial:** Keep the names of the variables as I have defined them.
+                        4. When you have finished, print the PDf file, sign it and bring it to me.
+                      )
+
+
+```{r, echo = TRUE}
+# Put this variable to TRUE when you have completed all the codes below.
+eval_mycode <- TRUE
+```
+
+# Exercise 1 : Multiple Choices Questions (MCQ) [25 marks]
+
+Below, for A) to E), you need to complete the R chunks in order to:
+
+- identify the **response variable** (give its CAPITALIZED NAME as provided in the text, e.g., `NAME`),
+- give its **type** (one of "binary", "discrete", "continuous", "ordinal" or "qualitative"), 
+- associate each data set with the most appropriate **regression technique** to use (one of "Simple Linear Regression", "Multiple Linear Regression", "ANOVA", "ANCOVA", "Logistic Regression", "Ordered Logistic Regression", "Poisson Regression" or "Multinomial Logit Model"), 
+- give the **R function name** to perform that technique,
+- give the **R package name** to which the function belongs.
+
+Once you will have completed the R chunks, the corresponding sentences written below each chunk will be automatically filled. So you should **not** modify the sentences yourself. Also, do **not** leave white spaces within the quotation marks.
+
+\bigskip
+
+A) We analyze the factors that influence young adults leaving their parents' home through three pathways (`PATHWAY`): marriage, premarital residential independence, and residential semiautonomy in dormitories and barracks. Some other variables measured are the family income (`INC`), the gender (`GENDER`) and the number of years since high school (`YEAR`).
+ 
+ 
+```{r, echo = TRUE}
+# Replace the ... with your answer. Do NOT remove the "".
+response_variable_name_A <- "PATHWAY"
+type_var_A <- "qualitative"
+regression_technique_A <- "MultinomialLogitModel"
+R_function_name_A <- "multinom"
+R_package_name_A <- "nnet"
+```
+
+_The response variable in data set A is ``r response_variable_name_A``. Its type is: `r type_var_A`. The regression technique to use to analyse this data set is called: `r regression_technique_A`. To perform it, one can use the ``r R_function_name_A`` function from the ``r R_package_name_A`` package._
+
+
+B) Dioxin is a molecule that can cause cancer in humans and animals. We want to explain the variation of measured dioxin emission at a number of municipal solid waste (MSW) incinerators plants. Concentration of dioxin (in ng/$m^3$) were measured (`DIOXIN`) in 100 gas samples. The explanatory variables are:
+
+- `PLANT`: the experiments have been conducted at three plants;
+- `TEMP`: the temperature of each gas sample;
+- `CO2`: the $CO_2$ concentration (in ppm) of each gas sample.
+
+```{r, echo = TRUE}
+# Replace the ... with your answer. Do NOT remove the "".
+response_variable_name_B <- "DIOXIN"
+type_var_B <- "continuous"
+regression_technique_B <- "MultipleLinearRegression"
+R_function_name_B <- "lm"
+R_package_name_B <- "stats"
+```
+
+_The response variable in data set B is ``r response_variable_name_B``. Its type is: `r type_var_B`. The regression technique to use to analyse this data set is called: `r regression_technique_B`. To perform it, one can use the ``r R_function_name_B`` function from the ``r R_package_name_B`` package._
+
+C) We want to predict if a person is likely to have an esophageal cancer (`ECANCER`). We consider a sample of 10,000 persons taken at random in the Australian population. The explanatory variables are the age of the person (`AGE`), as well as two binary indicators of smoking (`SMOKE`) and drinking (`DRINK`) habits.
+
+```{r, echo = TRUE}
+# Replace the ... with your answer. Do NOT remove the "".
+response_variable_name_C <- "ECANCER"
+type_var_C <- "binary"
+regression_technique_C <- "LogisticRegression"
+R_function_name_C <- "glm"
+R_package_name_C <- "stats"
+```
+
+_The response variable in data set C is ``r response_variable_name_C``. Its type is: `r type_var_C`. The regression technique to use to analyse this data set is called: `r regression_technique_C`. To perform it, one can use the ``r R_function_name_C`` function from the ``r R_package_name_C`` package._
+
+D) 50 fishes of the salmon species were caught in September 1997 at three specific locations (`LOC`) in the North sea and the number of parasites (`NBPAR`) were counted in each fish. We want to explain the number of parasites (`PARASITE`) as a function of the location and of the temperature (`TEMP`) of the sea.
+
+```{r, echo = TRUE}
+# Replace the ... with your answer. Do NOT remove the "".
+response_variable_name_D <- "NBPAR"
+type_var_D <- "discrete"
+regression_technique_D <- "PoissonRegression"
+R_function_name_D <- "glm"
+R_package_name_D <- "stats"
+```
+
+_The response variable in data set D is ``r response_variable_name_D``. Its type is: `r type_var_D`. The regression technique to use to analyse this data set is called: `r regression_technique_D`. To perform it, one can use the ``r R_function_name_D`` function from the ``r R_package_name_D`` package._
+
+E) We asked MATH5806 students if they think they have learnt something valuable during the course (variable `VALUE`). The possible answers are "Strongly Disagree", "Disagree", "Agree" and "Strongly Agree". We also record the age (`AGE`) of each student and if he/she has already worked (`WORKED`) in the private sector as a statistician or a data scientist.
+
+```{r, echo = TRUE}
+# Replace the ... with your answer. Do NOT remove the "".
+response_variable_name_E <- "VALUE"
+type_var_E <- "ordinal"
+regression_technique_E <- "OrderedLogisticRegression"
+R_function_name_E <- "polr"
+R_package_name_E <- "nnet"
+```
+
+_The response variable in data set E is ``r response_variable_name_E``. Its type is: `r type_var_E`. The regression technique to use to analyse this data set is called: `r regression_technique_E`. To perform it, one can use the ``r R_function_name_E`` function from the ``r R_package_name_E`` package._
+
+
+
+# Exercise 2 : Computer Simulation [36 marks]
+
+In this exercise, you are going to explore the concept of **censoring**.
+
+1. Generate independently $n=200$ observations $(x_i,y_i^*)$ from the model
+$$
+Y^* = \beta_1 + \beta_2 x + \epsilon,
+$$
+where $\beta_1=1$, $\beta_2=0.2$ and $\epsilon$ follows a standard normal distribution. The $x_i$'s are (randomly and independently) uniformly distributed between 0 and 14.
+    ```{r, eval = TRUE}
+    set.seed(1)
+    n <- 200
+    beta1 <- 1
+    beta2 <- 0.2
+    x <-  runif(n,0,14)
+    eps <- rnorm(n)
+    Ystar <- beta1+beta2*x+eps
+    ```
+
+
+2. Plot the simulated data, and add the estimated regression line (obtained by Simple Linear Regression).
+
+    ```{r, eval = TRUE}
+    # Do NOT change title, x- and y- labels, colours, etc
+    plot(x,Ystar, main = "Regression without censoring", xlab = "x", ylab = "y*", col = "orangered", pch = 20, ylim = c(0, 8))
+    abline(h = 2)
+    ( SLR_lm <- lm(Ystar~x) )
+    abline(SLR_lm, col = "blue")
+        
+    # Save plot for marking - Do not modify below
+    my_par2.2 <- par()
+    dev.copy(device = png, filename = 'pic2.2.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+3. Now, let us suppose that the following **censoring** occured: we do not observe (measure) the value of $y^*$ for any observation with a value of $y^*$ lower than some given threshold $\tau$. Instead of completely removing these cases (which would then be called **truncation**), we rather set the value of $y^*$ to some given value $\tau_y$. 
+
+    This situation could happen for example at a charity reception. Every person present is obviously willing to make a donation of $y^*\$$. But if the minimum amount allowed for a donation is set to $\tau\$$, then some people might not be able to give something (and thus would give $\tau_y=0\$$). Consequently, censoring will occur, and we will rather only observe values of the following random variable:
+$$
+ Y_i=\left\{
+\begin{array}{cl}
+Y_i^* & \text{if }Y_i^*>\tau\\
+\tau_y & \text{if }Y_i^*\leq \tau.
+\end{array}
+\right.
+$$
+     Now, let us get back to our simulated example. 
+     
+     Set $\tau=2$ and $\tau_y=2$. Plot the data $(x_i, y_i)$, $i=1,\ldots,n$ as above but use triangles (`pch = 17`) for the observations that have been censored (so that all observations below the horizontal line $h=2$ will be represented by triangles lying just above the $x$-axis). Add (\textcolor{blue}{in blue}) the fitted SLR line for the observations $(x_i, y_i^*)$ and (\textcolor{red}{in red}) the fitted SLR line for the observations $(x_i, y_i)$. Observe the discrepancy between the two lines. (Note that the aim would be to obtain the blue line only from the observations $(x_i, y_i)$, which is not done very well by the SLR modeling.)
+     
+     
+    ```{r, eval = TRUE}
+    tau <- 2
+    tauy <- 2
+    # Do NOT change title, x- and y- labels, colours, etc
+    plot(x[which(Ystar>tau)],Ystar[which(Ystar>tau)], main = "Regression with censoring", xlab = "x", ylab = "y", col = "orangered", pch = 20, ylim = c(0, 8))
+    points(x[which(Ystar<=tau)],rep(tauy,n)[which(Ystar<=tau)], pch = 17)
+    abline(h = 2)
+    abline(SLR_lm, col = "blue")
+    Y <- Ystar ;  for(i in 1:n){
+      if (Ystar[i]<=tau) Y[i]<-tauy}
+    ( SLR_censored <- lm(Y~x) )
+    abline(SLR_censored, col = "red")
+    # Save plot for marking - Do not modify below
+    my_par2.3 <- par()
+    dev.copy(device = png, filename = 'pic2.3.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+
+4. We just need another modeling technique than the SLR. This technique is called the **Tobit model**. Find (Google search) an R function that can perform a Tobit regression and add (\textcolor{magenta}{in magenta}) the Tobit fitted line on the previous plot reproduced below. Observe the results to see if you were able to do better.
+
+    ```{r, eval = TRUE}
+    # Do NOT change title, x- and y- labels, colours, etc
+    plot(x[which(Ystar>tau)],Ystar[which(Ystar>tau)], main = "Regression with Tobit model", xlab = "x", ylab = "y", col = "orangered", pch = 20, ylim = c(0, 8))
+    points(x[which(Ystar<=tau)],rep(tauy,n)[which(Ystar<=tau)], pch = 17)
+    abline(h = 2)
+    abline(SLR_lm, col = "blue")
+    abline(SLR_censored, col = "red")
+    library("AER")
+    ( tobit_model <- tobit(Ystar~x,left=tau) )
+    abline(tobit_model, col = "magenta")
+        
+    # Save plot for marking - Do not modify below
+    my_par2.4 <- par()
+    dev.copy(device = png, filename = 'pic2.4.png', width = 1000, height = 500) 
+    dev.off()
+    ```
+    
+5. Let us compare the Residual Sums of Squares (RSS) for the two approaches (**computed with respect to the $y^*_i$ values**). Compute `RSS_lm` and `RSS_Tobit`, the RSS for the SLR and the Tobit approaches respectively. Comment the results.
+
+    ```{r, eval = TRUE}
+    ( RSS_SLR_censored <- sum(residuals(SLR_lm)^2) )
+    ( RSS_Tobit <- sum(residuals(tobit_model)^2) )
+    ```
+
+> You comment here: The RSS for the SLR and the Tobit approaches are 196.9594 and 136.2085, respectively. The RSS for Tobit is smaller than that of SLR.
+
+\newpage
+
+# Exercise 3 : Analysis of a real data set [39 marks]
+
+You are going to analyse the prestige of a scientist's first academic job as a university lecturer using the random variable `JOB` which can take values in the closed interval $[1;5]$. The prestige of the job was unavailable for scientists hired in a department where graduate programs were rated below 1.0 and for departments without graduate programs. The prestige of `JOB` for these cases have been recoded as 1, we are thus in presence of censoring. (We could also consider that we have a truncation and delete all these observations but we will not follow that road here.)
+
+The table below describes all the variables and give a few descriptive statistics on them for $n=408$ scientists.
+
+
+| Name   | Mean    | SD       | Minimum  | Maximum | Description                   |
+|:-------|--------:|---------:|---------:|--------:|:------------------------------|
+| JOB    | 2.23    | 0.97     | 1.00     | 4.80    | Prestige of job (from 1 to 5) |
+| FEM    | 0.39    | 0.49     | 0.00     | 1.00    | 1 if female; 0 if male        |
+| PHD    | 3.20    | 0.95     | 1.00     | 4.80    | Prestige of Ph.D. department  |
+| MENT   | 45.47   | 65.53    | 0.00     | 532.0   | Citations received by mentor  |
+| FEL    | 0.62    | 0.49     | 0.00     | 1.00    | 1 if held fellowship; else 0  |
+| ART    | 2.28    | 2.26     | 0.00     | 18.00   | Number of articles published  |
+| CIT    | 21.72   | 33.06    | 0.00     | 203.00  | Number of citations received  | 
+
+
+1. Download the data set `tobjob2.xls` from Moodle. Copy and then Paste Special (Text and Numbers only) the data
+in a new Excel (97/2003) file named `tobjob2_paste_special.xls`. Import these data into R.
+
+    **Note:** If you cannot succeed using the `read.xls()` function on your system as suggested below, you can instead first export (from Excel) your file into a comma separated values (CSV) format, and then use the `read.csv()` function.
+
+    ```{r, eval = TRUE}
+    # This package enables one to read Excel files
+    library("gdata")
+    
+    # Read the data set (do not use a PATH here)
+    # Keep only the variables indicated in the above table
+    prestige <- read.csv("tobjob2_paste_special.csv",header = TRUE)[,2:8]
+    
+    # We rename the columns to be exactly the same as in the Table above
+    colnames(prestige) <- c("JOB", "FEM", "PHD", "MENT", "FEL", "ART", "CIT")
+
+    # We display the first 10 lines
+    head(prestige)
+    ```
+    
+2.  Reproduce the numerical results of the above table.
+
+    ```{r, eval = TRUE}
+    # Sample size
+    ( n_prestige <- nrow(prestige) )
+    
+    # Means
+    ( means_prestige <- apply(prestige,2,'mean') )
+      
+    # Standard Deviations
+    ( SDs_prestige <- apply(prestige,2,'sd') )
+    
+    # Minimums
+    ( minimums_prestige <- apply(prestige,2,'min') )
+    
+    # Maximums
+    ( maximums_prestige <- apply(prestige,2,'max') )
+    ```
+    
+    
+3. The Tobit model is defined through a **latent** random variable $Y^*$ that has been censored on the left, and whose expectation $\mathbb{E}(Y^*)$ is supposed to be linearly related to a set of predictors $\boldsymbol{x}=(x_1,\ldots,x_p)^T$:
+$$
+ Y_i=\left\{
+\begin{array}{cl}
+Y_i^*=\boldsymbol{x}_i^T\boldsymbol{\beta}+\epsilon_i & \text{if }\quad Y_i^*>\tau\\
+\tau_y & \text{if }\quad Y_i^*\leq \tau,
+\end{array}
+\right.
+$$
+    with $\epsilon_i\sim\mathcal{N}(0,\sigma^2)$.
+    
+    What is a latent random variable? (Give a definition.)
+    
+    > Your response here: In statistics, latent random variables, are variables that are not directly observed. But They are rather inferred through a mathematical model from other variables that are observed.
+    
+    The threshold $\tau$ determines whether $Y^*$ is censored, while $\tau_y$ is the value assigned to $Y$ if $Y^*$ is censored. What are the values of $\tau$ and of $\tau_y$ for the Prestige data set:
+    
+    ```{r, eval = TRUE}
+    ( tau_prestige <- 1 )
+    ( tauy_prestige <- 1 )
+    ```
+    
+
+4. Use an "official" R function as the one you provided in Exercise 2 to compute the estimates of the coefficients $\beta$'s and $\sigma^2$. 
+
+    ```{r, eval = TRUE}
+    library("AER")
+    tobit_prestige <-  tobit(JOB~ .,left=tau_prestige,data=prestige)
+    summary(tobit_prestige)
+    ```
+    
+5. Interpret some of the results using the method of Partial Changes in $Y^*$.
+
+> Your interpretation here: The most significant impact of these variables that PHD,FEL and CIT on the variable JOB. 
+
+6. Denote respectively by $\Phi(\cdot)$ and $\phi(\cdot)$ the cumulative distribution function and the density function of the standard normal. Write the formula for the probability of "observation" $Y_i^*$ to being censored (as a function of $\Phi$, $\tau$, $\boldsymbol{x}_i$, $\boldsymbol{\beta}$ and $\sigma$):
+    $$
+    Pr(Y_i^*\leq \tau|\boldsymbol{x}_i) = Pr(\epsilon_i\leq\tau-\boldsymbol{x}_i^T\boldsymbol{\beta})=\Phi(\frac{\tau-
+    \boldsymbol{x}_i^T\boldsymbol{\beta}}{\sigma})
+    $$
+    Write the log-likelihood (as a function of $y_i$, $\phi$, $\Phi$, $\tau$, $\boldsymbol{x}_i$, $\boldsymbol{\beta}$ and $\sigma$):
+    $$
+    \textrm{ln}~\mathcal{L}(\boldsymbol{\beta},\sigma^2|\boldsymbol{y},\boldsymbol{X}) = \sum_{\text{Uncensored}}\ln\phi(\frac{y_i-\boldsymbol{x}_i^T\boldsymbol{\beta}}{\sigma}) + \sum_{\text{Censored}} \ln\Phi(\frac{\tau-
+    \boldsymbol{x}_i^T\boldsymbol{\beta}}{\sigma})
+    $$
+7. Create a function `loglik()` to compute the log-likelihood (**without using for loops**). Maximise the log-likelihood using the Prestige data set. Observe the value of the log-likelihood at the optimum and compare it with the one you found at question 4 above. Observe the values of the estimates for the coefficients $\beta$'s. Check that you find the same values than in question 4. You will use the R built-in optimisation function `optim()` with the "BFGS" method and the control argument `fnscale=-1`.
+
+    ```{r, eval =TRUE}
+    loglik <- function(theta, y, X, tau) {
+      beta <- as.numeric(theta[1:7])
+      sigma <- sqrt(abs(theta[8]))
+      X <- as.matrix(X)
+      y_i=y[which(y!=1)];
+      x_i=X[which(y==1),];x_u=X[which(y!=1),]
+      v=dnorm((y_i-x_u%*%beta)/sigma)/sigma
+      c=1-pnorm((x_i%*%beta-tau)/sigma)
+      Li=sum(log(v))+sum(log(c))
+      return(Li)
+    }
+    y_prestige=prestige$JOB
+    X_prestige=cbind(rep(1,n_prestige),prestige[,-1])
+    starting_parameters=c(rep(0,7),1)
+   ( optim_loglik <- optim(starting_parameters,loglik,method="BFGS",control=list(fnscale=-1),y=y_prestige,X=X_prestige,tau=tau_prestige))
+    ```
+
+
